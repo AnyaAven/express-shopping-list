@@ -24,7 +24,7 @@ router.post("", function (req, res) {
   const item = { name, price };
   items.push(item);
 
-  return res.json({ added: item });
+  return res.status(201).json({ added: item });
 });
 
 /** GET /items/:name: get a single item by name in the items "DB"  */
