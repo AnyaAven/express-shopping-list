@@ -4,14 +4,13 @@ import app from "./app.js";
 
 import { items } from "./fakeDb.js";
 
-const TEST_ITEM = {name: "testItem", price: 1};
+const TEST_ITEM = { name: "testItem", price: 1 };
 
-beforeEach(function(){
-  const copy = items;
+beforeEach(function () {
   items.push(TEST_ITEM);
 });
 
-afterEach(function(){
+afterEach(function () {
   items.length = 0;
 });
 
@@ -19,7 +18,7 @@ describe("GET /items ", function () {
 
   test("returns all items in 'db'", async function () {
     const resp = await request(app).get("/items");
-    expect(resp.body).toEqual({items: items});
+    expect(resp.body).toEqual({ items: items });
   });
 });
 
@@ -29,7 +28,7 @@ describe("POST /items", function () {
       .post("/items")
       .send({ name: "testName", price: 1 });
 
-    expect(resp.body).toEqual({added: { name: "testName", price: 1 }});
+    expect(resp.body).toEqual({ added: { name: "testName", price: 1 } });
     expect(resp.statusCode).toEqual(201);
   });
 
@@ -43,16 +42,16 @@ describe("POST /items", function () {
     });
 });
 
-describe("GET /items/:name", function(){
-  test("Test getting an item by name", async function(){
+describe("GET /items/:name", function () {
+  test("Test getting an item by name", async function () {
     const resp = await request(app).get("/items/testItem");
-    expect(resp.body).toEqual({name: "testItem", price: 1});
+    expect(resp.body).toEqual({ name: "testItem", price: 1 });
   });
 
   test(
     "Test that we throw a NotFound err when we send a name that does not exist",
-    async function(){
+    async function () {
       const resp = await request(app).get("/items/badName");
       expect(resp.statusCode).toEqual(404);
     });
-})
+});
