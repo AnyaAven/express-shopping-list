@@ -35,7 +35,6 @@ describe("POST /items", function () {
 
     expect(resp.body).toEqual({ added: { name: "newTestName", price: 50 } });
     expect(resp.statusCode).toEqual(201);
-
   });
 
   test("Test that we throw an NotFound err when we send incorrect URL params",
@@ -59,6 +58,34 @@ describe("GET /items/:name", function () {
     async function () {
       const resp = await request(app).get("/items/badName");
       expect(resp.statusCode).toEqual(404);
+    });
+});
+
+
+describe("PATCH /items/:name", function () {
+  test("Test patching an item by name", async function () {
+    const resp = await request(app)
+      .patch(`/items/${TEST_ITEM1.name}`)
+      .send({ name: "patchedItem", price: 1 });
+
+    expect(resp.body).toEqual({ updated: { name: "patchedItem", price: 1 } });
+  });
+
+  test(
+    "Test that we throw a NotFound err when we send a name that does not exist",
+    async function () {
+      const resp = await request(app)
+        .patch(`/items/badName`)
+        .send({ name: "patchedItem", price: 1 })
+
+      expect(resp.statusCode).toEqual(404);
+    });
+
+  test(
+    "Test that we throw a BadRequest err when we don't send an update",
+    async function () {
+      const resp = await request(app).patch("/items/badName");
+      expect(resp.statusCode).toEqual(400);
     });
 });
 
