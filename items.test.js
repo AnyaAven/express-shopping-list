@@ -61,7 +61,6 @@ describe("GET /items/:name", function () {
     });
 });
 
-
 describe("PATCH /items/:name", function () {
   test("Test patching an item by name", async function () {
     const resp = await request(app)
@@ -76,7 +75,7 @@ describe("PATCH /items/:name", function () {
     async function () {
       const resp = await request(app)
         .patch(`/items/badName`)
-        .send({ name: "patchedItem", price: 1 })
+        .send({ name: "patchedItem", price: 1 });
 
       expect(resp.statusCode).toEqual(404);
     });
@@ -89,3 +88,27 @@ describe("PATCH /items/:name", function () {
     });
 });
 
+
+describe("DELETE /items/:name", function () {
+  test("Test deleting an item by name", async function () {
+    expect(items.length).toEqual(3);
+    const resp = await request(app).delete(`/items/${TEST_ITEM1.name}`)
+
+    expect(resp.body).toEqual({ message: "Deleted" });
+    expect(items.length).toEqual(2);
+
+    // First item in items should no longer have testItem1
+    expect(items[0].name).toEqual(TEST_ITEM2.name);
+  });
+
+  test(
+    "Test that we throw a NotFound err when we send a name that does not exist",
+    async function () {
+      expect(items.length).toEqual(3);
+      const resp = await request(app)
+        .delete(`/items/badName`)
+
+      expect(resp.statusCode).toEqual(404);
+      expect(items.length).toEqual(3);
+    });
+});
