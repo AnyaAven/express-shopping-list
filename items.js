@@ -14,11 +14,13 @@ router.get("", function (req, res) {
  * Returns JSON: {added: {name: "itemName", price: itemPrice}}
 */
 router.post("", function (req, res) {
-  if (req.body === undefined) throw new BadRequestError();
-  if (!(name in req.body) && !(price in req.body)) throw new BadRequestError();
+  if (req.body === undefined) throw new BadRequestError("Must be post request");
 
+  const newItem = req.body
   const name = req.body.name;
   const price = req.body.price;
+  if (!("name" in req.body) || !("price" in req.body)) throw new BadRequestError("The params must be name and price");
+
   const item = { name, price };
   items.push(item);
 
